@@ -4,6 +4,7 @@ const express = require('express'),
     catchAsync = require('../utilities/CatchAsync'),
     ExpressError = require('../utilities/ExpressError'),
     { reviewSchema } = require('../schemas/schemas'),
+    { isLoggedIn } = require('../middleware/middleware'),
     Review = require('../models/review');
 
 // Middleware functions
@@ -16,7 +17,7 @@ const validateReview = (req, res, next) => {
 }
 
 // Post form data to create view and attach to campground
-router.post('/', validateReview, catchAsync(async (req, res) => {
+router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
     campground.reviews.push(review);
